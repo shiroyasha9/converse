@@ -1,3 +1,3 @@
-### Github repo for medium article series
+# Converse
 
-[Part 1:](https://medium.com/p/976555ecba)
+A new way to talk to your friends.
