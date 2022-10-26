@@ -1,21 +1,8 @@
+import { EVENTS } from 'constants/events';
 import { nanoid } from 'nanoid';
 import { Server, Socket } from 'socket.io';
 
 import logger from './utils/logger';
-
-const EVENTS = {
-  CONNECTION: 'connection',
-  CLIENT: {
-    CREATE_ROOM: 'CREATE_ROOM',
-    JOIN_ROOM: 'JOIN_ROOM',
-    SEND_ROOM_MESSAGE: 'SEND_ROOM_MESSAGE'
-  },
-  SERVER: {
-    ROOMS: 'ROOMS',
-    JOINED_ROOM: 'JOINED_ROOM',
-    ROOM_MESSAGE: 'ROOM_MESSAGE'
-  }
-};
 
 const rooms: Record<string, { name: string }> = {};
 
