@@ -14,10 +14,10 @@ interface IContext {
   socket: Socket;
   username?: string;
   setUsername: Function;
-  messages?: IMessage[];
-  setMessages: Function;
+  messages: IMessage[];
+  setMessages: (messages: IMessage[]) => void;
   roomId?: string;
-  rooms: object;
+  rooms: { [key: string]: any };
 }
 
 const socket = io(SOCKET_URL);
