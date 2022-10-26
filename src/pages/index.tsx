@@ -1,5 +1,5 @@
-import io from "socket.io-client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from 'react';
+import io from 'socket.io-client';
 
 let socket;
 
@@ -9,9 +9,9 @@ type Message = {
 };
 
 export default function Home() {
-  const [username, setUsername] = useState("");
-  const [chosenUsername, setChosenUsername] = useState("");
-  const [message, setMessage] = useState("");
+  const [username, setUsername] = useState('');
+  const [chosenUsername, setChosenUsername] = useState('');
+  const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Array<Message>>([]);
 
   useEffect(() => {
@@ -20,11 +20,11 @@ export default function Home() {
 
   const socketInitializer = async () => {
     // We just call it because we don't need anything else out of it
-    await fetch("/api/socket");
+    await fetch('/api/socket');
 
     socket = io();
 
-    socket.on("newIncomingMessage", (msg) => {
+    socket.on('newIncomingMessage', (msg) => {
       setMessages((currentMsg) => [
         ...currentMsg,
         { author: msg.author, message: msg.message },
@@ -34,12 +34,12 @@ export default function Home() {
   };
 
   const sendMessage = async () => {
-    socket.emit("createdMessage", { author: chosenUsername, message });
+    socket.emit('createdMessage', { author: chosenUsername, message });
     setMessages((currentMsg) => [
       ...currentMsg,
       { author: chosenUsername, message },
     ]);
-    setMessage("");
+    setMessage('');
   };
 
   const handleKeypress = (e) => {
@@ -52,40 +52,40 @@ export default function Home() {
   };
 
   return (
-    <div className="flex items-center p-4 mx-auto min-h-screen justify-center bg-purple-500">
-      <main className="gap-4 flex flex-col items-center justify-center w-full h-full">
+    <div className="mx-auto flex min-h-screen items-center justify-center bg-purple-500 p-4">
+      <main className="flex h-full w-full flex-col items-center justify-center gap-4">
         {!chosenUsername ? (
           <>
-            <h3 className="font-bold text-white text-xl">
+            <h3 className="text-xl font-bold text-white">
               How people should call you?
             </h3>
             <input
               type="text"
               placeholder="Identity..."
               value={username}
-              className="p-3 rounded-md outline-none"
+              className="rounded-md p-3 outline-none"
               onChange={(e) => setUsername(e.target.value)}
             />
             <button
               onClick={() => {
                 setChosenUsername(username);
               }}
-              className="bg-white rounded-md px-4 py-2 text-xl"
+              className="rounded-md bg-white px-4 py-2 text-xl"
             >
               Go!
             </button>
           </>
         ) : (
           <>
-            <p className="font-bold text-white text-xl">
+            <p className="text-xl font-bold text-white">
               Your username: {username}
             </p>
-            <div className="flex flex-col justify-end bg-white h-[20rem] min-w-[33%] rounded-md shadow-md ">
-              <div className="h-full last:border-b-0 overflow-y-scroll">
+            <div className="flex h-[20rem] min-w-[33%] flex-col justify-end rounded-md bg-white shadow-md ">
+              <div className="h-full overflow-y-scroll last:border-b-0">
                 {messages.map((msg, i) => {
                   return (
                     <div
-                      className="w-full py-1 px-2 border-b border-gray-200"
+                      className="w-full border-b border-gray-200 py-1 px-2"
                       key={i}
                     >
                       {msg.author} : {msg.message}
@@ -93,18 +93,18 @@ export default function Home() {
                   );
                 })}
               </div>
-              <div className="border-t border-gray-300 w-full flex rounded-bl-md">
+              <div className="flex w-full rounded-bl-md border-t border-gray-300">
                 <input
                   type="text"
                   placeholder="New message..."
                   value={message}
-                  className="outline-none py-2 px-2 rounded-bl-md flex-1"
+                  className="flex-1 rounded-bl-md py-2 px-2 outline-none"
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyUp={handleKeypress}
                 />
-                <div className="border-l border-gray-300 flex justify-center items-center  rounded-br-md group hover:bg-purple-500 transition-all">
+                <div className="group flex items-center justify-center rounded-br-md  border-l border-gray-300 transition-all hover:bg-purple-500">
                   <button
-                    className="group-hover:text-white px-3 h-full"
+                    className="h-full px-3 group-hover:text-white"
                     onClick={() => {
                       sendMessage();
                     }}
