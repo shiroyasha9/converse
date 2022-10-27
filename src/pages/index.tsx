@@ -32,11 +32,16 @@ export default function Home() {
 
   const sendMessage = async () => {
     if (!String(message).trim()) return;
+    const currentDateTimestamp = new Date().toString();
 
-    socket.emit('createdMessage', { author: chosenUsername, message });
+    socket.emit('createdMessage', {
+      author: chosenUsername,
+      message,
+      date: currentDateTimestamp,
+    });
     setMessages((currentMsg) => [
       ...currentMsg,
-      { author: chosenUsername, message, date: new Date() },
+      { author: chosenUsername, message, date: currentDateTimestamp },
     ]);
     setMessage('');
   };
@@ -96,7 +101,7 @@ export default function Home() {
                           {' '}
                           {msg.author === username ? 'You' : msg.author}{' '}
                         </p>
-                        <p>{formatTime(msg.date)}</p>
+                        <p>{formatTime(new Date(msg.date))}</p>
                       </div>
                       <p>{msg.message}</p>
                     </div>
