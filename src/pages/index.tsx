@@ -46,12 +46,18 @@ export default function Home() {
     setMessage('');
   };
 
-  const handleKeypress = (e) => {
+  const handleKeypress = (e: React.KeyboardEvent) => {
     //it triggers by pressing the enter key
-    if (e.keyCode === 13) {
+    if (e.key === 'Enter') {
       if (message) {
         sendMessage();
       }
+    }
+  };
+
+  const handleUsernameSubmit = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      setChosenUsername(username);
     }
   };
 
@@ -60,73 +66,91 @@ export default function Home() {
       <main className="flex h-full w-full flex-col items-center justify-center gap-4">
         {!chosenUsername ? (
           <>
-            <h3 className="text-xl font-bold text-white">
-              How people should call you?
-            </h3>
-            <input
-              type="text"
-              placeholder="Identity..."
-              value={username}
-              className="rounded-md p-3 outline-none"
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <button
-              onClick={() => {
-                setChosenUsername(username);
-              }}
-              className="rounded-md bg-white px-4 py-2 text-xl"
-            >
-              Go!
-            </button>
+            <h2 className="mb-2 text-3xl font-bold text-white">
+              Welcome to <span className="text-[#F2FF49]">Converse</span> 👋
+            </h2>
+            <h3 className="text-xl text-white">What would be your username?</h3>
+            <div className="flex flex-row items-center justify-between space-x-2">
+              <input
+                type="text"
+                placeholder="Rick"
+                value={username}
+                className="rounded-md py-3 px-6 outline-none"
+                onChange={(e) => setUsername(e.target.value)}
+                onKeyUp={handleUsernameSubmit}
+              />
+              <button
+                onClick={() => {
+                  setChosenUsername(username);
+                }}
+                className="text-md rounded-md bg-[#F2FF49] px-6 py-3 font-semibold"
+              >
+                Let's start conversing!
+              </button>
+            </div>
           </>
         ) : (
           <>
             <p className="text-xl font-bold text-white">
-              Your username: {username}
+              Remember to be polite, {username}! 🥰
             </p>
             <div className="flex h-[20rem] min-w-[33%] flex-col justify-end rounded-md bg-white shadow-md ">
               <div className="h-full overflow-y-scroll last:border-b-0">
                 {messages.map((msg, i) => {
                   return (
                     <div
-                      className="w-full border-b border-gray-200 py-1 px-2"
+                      className={`flex w-full flex-col justify-end border-b border-gray-200/60 py-1 px-2 ${
+                        msg.author === chosenUsername && 'items-end'
+                      }`}
                       key={i}
                     >
-                      <div className="flex flex-row items-center justify-between">
-                        <p
-                          className={`${
-                            msg.author !== username && 'text-purple-500'
-                          } font-bold`}
-                        >
-                          {' '}
-                          {msg.author === username ? 'You' : msg.author}{' '}
-                        </p>
-                        <p>{formatTime(new Date(msg.date))}</p>
+                      <div className="flex flex-row items-center space-x-2">
+                        {msg.author !== chosenUsername ? (
+                          <>
+                            <p className="font-bold text-purple-500">
+                              {msg.author}
+                            </p>
+                            <p className="text-xs">
+                              {formatTime(new Date(msg.date))}
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="text-xs">
+                              {formatTime(new Date(msg.date))}
+                            </p>
+                            <p className="font-bold">You</p>
+                          </>
+                        )}
                       </div>
                       <p>{msg.message}</p>
                     </div>
                   );
                 })}
               </div>
-              <div className="flex w-full rounded-bl-md border-t border-gray-300">
+              <div className="flex w-full rounded-b-md border-t border-gray-300">
                 <input
                   type="text"
                   placeholder="New message..."
                   value={message}
-                  className="flex-1 rounded-bl-md py-2 px-2 outline-none"
+                  className={`flex-1 ${
+                    message.trim().length > 0 ? 'rounded-bl-md' : 'rounded-b-md'
+                  } py-2 px-2 outline-none`}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyUp={handleKeypress}
                 />
-                <div className="group flex items-center justify-center rounded-br-md  border-l border-gray-300 transition-all hover:bg-purple-500">
-                  <button
-                    className="h-full px-3 group-hover:text-white"
-                    onClick={() => {
-                      sendMessage();
-                    }}
-                  >
-                    Send
-                  </button>
-                </div>
+                {message.trim().length > 0 && (
+                  <div className="group flex items-center justify-center rounded-br-md  border-l border-gray-300 bg-[#F2FF49] transition-all hover:bg-[#fdef27]">
+                    <button
+                      className="h-full px-3"
+                      onClick={() => {
+                        sendMessage();
+                      }}
+                    >
+                      ➡️
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </>
