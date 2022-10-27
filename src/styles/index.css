@@ -4,3 +4,12 @@
 /* Your own custom component styles */
 
 @import 'tailwindcss/utilities';
+
+@layer components {
+  .screen {
+    @apply mx-auto flex min-h-screen items-center justify-center bg-purple-500 p-4;
+  }
+  .main {
+    @apply flex h-full w-full flex-col items-center justify-center gap-4;
+  }
+}

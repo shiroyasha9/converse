@@ -22,8 +22,8 @@ export default function Home() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen items-center justify-center bg-purple-500 p-4">
-      <main className="flex h-full w-full flex-col items-center justify-center gap-4">
+    <div className="screen">
+      <main className="main">
         <h2 className="mb-2 text-3xl font-bold text-white">
           Welcome to <span className="text-[#F2FF49]">Converse</span> 👋
         </h2>
