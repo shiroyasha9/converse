@@ -1,16 +1,17 @@
 import { useUpdateAtom } from 'jotai/utils';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useRef } from 'react';
 
+import Input from '../components/Input';
 import { usernameAtom } from '../stores/user';
 
 export default function Home() {
-  const [enteredUsername, setEnteredUsername] = useState('');
+  const usernameRef = useRef<HTMLInputElement>(null);
   const setUsername = useUpdateAtom(usernameAtom);
   const router = useRouter();
 
   const handleUsernameSubmit = () => {
-    setUsername(enteredUsername);
+    setUsername(usernameRef.current.value);
     router.push('/chat');
   };
 
@@ -28,13 +29,11 @@ export default function Home() {
         </h2>
         <h3 className="text-xl text-white">What would be your username?</h3>
         <div className="flex flex-row items-center justify-between space-x-2">
-          <input
+          <Input
             type="text"
             placeholder="Rick"
-            value={enteredUsername}
-            className="rounded-md py-3 px-6 outline-none"
-            onChange={(e) => setEnteredUsername(e.target.value)}
-            onKeyUp={handleKeyPress}
+            htmlRef={usernameRef}
+            keyPressHandler={handleKeyPress}
           />
           <button
             onClick={handleUsernameSubmit}
