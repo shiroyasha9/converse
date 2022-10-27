@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
-let socket;
+import { IMessage } from '../types';
+import { formatTime } from '../utils/dateTime';
 
-type Message = {
-  author: string;
-  message: string;
-};
+let socket;
 
 export default function Home() {
   const [username, setUsername] = useState('');
   const [chosenUsername, setChosenUsername] = useState('');
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<Array<Message>>([]);
+  const [messages, setMessages] = useState<Array<IMessage>>([]);
 
   useEffect(() => {
     socketInitializer();
@@ -24,20 +22,21 @@ export default function Home() {
 
     socket = io();
 
-    socket.on('newIncomingMessage', (msg) => {
+    socket.on('newIncomingMessage', (msg: IMessage) => {
       setMessages((currentMsg) => [
         ...currentMsg,
-        { author: msg.author, message: msg.message },
+        { author: msg.author, message: msg.message, date: msg.date },
       ]);
-      console.log(messages);
     });
   };
 
   const sendMessage = async () => {
+    if (!String(message).trim()) return;
+
     socket.emit('createdMessage', { author: chosenUsername, message });
     setMessages((currentMsg) => [
       ...currentMsg,
-      { author: chosenUsername, message },
+      { author: chosenUsername, message, date: new Date() },
     ]);
     setMessage('');
   };
@@ -88,7 +87,18 @@ export default function Home() {
                       className="w-full border-b border-gray-200 py-1 px-2"
                       key={i}
                     >
-                      {msg.author} : {msg.message}
+                      <div className="flex flex-row items-center justify-between">
+                        <p
+                          className={`${
+                            msg.author !== username && 'text-purple-500'
+                          } font-bold`}
+                        >
+                          {' '}
+                          {msg.author === username ? 'You' : msg.author}{' '}
+                        </p>
+                        <p>{formatTime(msg.date)}</p>
+                      </div>
+                      <p>{msg.message}</p>
                     </div>
                   );
                 })}
